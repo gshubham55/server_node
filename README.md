@@ -1,2 +1,1 @@
-server_node
-===========
+Basic node based implementation of http server
