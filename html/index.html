@@ -1,0 +1,21 @@
+<head>
+	<title>Testing node.js</title>
+</head>
+<body>
+	<div id="chatlog">
+	</div>
+		<input type="text" id="message">
+		<!-- <input type="submit" onClick="javascript:sendMessage()"> -->
+		<button onclick="sendMessage()">Click me</button>
+	<script type="text/javascript">
+		var ws = new WebSocket('ws://localhost:9000', 'echo-protocol');
+		function sendMessage(){
+		    var message = document.getElementById('message').value;
+		    ws.send(message);
+		}
+		ws.addEventListener("message", function(message) {
+		    var msg = message.data;
+		    document.getElementById('chatlog').innerHTML += '<br>' + msg; // Append the message
+		});
+	</script>
+</body>

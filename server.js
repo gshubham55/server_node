@@ -1,28 +1,45 @@
 var net = require('net');
 var sys = require('sys');
+// var fs = require('fs');
 var host = '127.0.0.1';
 var port = 8080;
 var count =0;
 var server = net.createServer(function (socket) {
-	
-	
-	count++;
-	socket.addListener("connect", function () {
+    
+    
+    count++;
+    socket.on("connect", function () {
         console.log('\nconnected: ' + socket.remoteAddress);
         sys.puts( "count : " + count);
     
     
     });
-	socket.addListener("data", function (data) {
-    socket.write(data);
-    socket.end();
-    });
+    // socket.write('content-type : text/plain');
+    
     socket.write("Hello World!\n");
-
-    socket.on("end",function()
-    {
-        console.log("Connection closed");
+    socket.on("data", function (data) {
+    socket.write(data.toString());
+    // socket.end();
+    var responseHeaders={
+      "Content-Length": "1000",
+      "Content-Type":"plain/text",
+      "Server":"lunatic"
+    }
+    var str = "HTTP/1.1 200 OK\r\n";
+    
+    socket.write(str);
+   
+    for(i in responseHeaders){
+      socket.write(i+": "+responseHeaders[i]+"\r\n");
+    }
+  
+     socket.write("\r\n");
     });
+    
+    // var fileStream = fs.createReadStream('me.jpg');
+    // fileStream.pipe(socket);
+  //   socket.pipe(socket);
+    // socket.end();
     socket.on("error", function (error)
     {
         if (error.code=='EADDRINUSE') {
@@ -32,6 +49,10 @@ var server = net.createServer(function (socket) {
                 server.listen(port,host);
             },1000);
         }
+    });
+    socket.on("end",function()
+    {
+        console.log("Connection closed");
     });
 
 }).listen(port,host);
