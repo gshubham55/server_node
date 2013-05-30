@@ -1,6 +1,6 @@
 var net = require('net');
-var HOST = '127.0.0.1';//Listen on localhost
-var PORT = 9000;//on port 9000
+var HOST = '0.0.0..0';//Listen on localhost
+var PORT = 8080;//on port 9000
 
 var listener=function(c){
   //c is a connection

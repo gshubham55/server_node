@@ -1,10 +1,11 @@
-// chat server working on port 9000 and localhost
+// chat server working on port 8080 and localhost
 
 
 var http = require('http');
 var WebSocketServer = require('websocket').server;
+var express = require('express');
 
-var port = 9000;
+var port = 8080;
 var count=0;
 var msgCount=0;
 var curClients=0;
@@ -19,10 +20,11 @@ var server = http.createServer(function(req,res){
 server.listen(port,function(){
     console.log((new Date()) + ' server is On AND Hot');
 });
+
 function printClients(){
     console.log((new Date()) + ' Total Clients Connected: ' + curClients);
-    
 }
+
 setInterval(printClients,100000);
 wsServer = new WebSocketServer({
     httpServer: server,
@@ -79,8 +81,8 @@ wsServer.on('request',function(request){
 	});
 
     connection.on('close', function(reasonCode, description) {
-        curClients--;
+            curClients--;
         console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
         delete clients[id];
     });
-})  
+})

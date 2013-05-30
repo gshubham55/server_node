@@ -1,0 +1,7 @@
+<script type="text/javascript" src="socket.io/socket.io.js"></script>
+<script type="text/javascript">
+	var server = io.connect('http://localhost:8080');
+	server.on('messages',function(data){
+		alert(data.hello);
+	})
+</script>

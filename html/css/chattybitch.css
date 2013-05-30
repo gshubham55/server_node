@@ -1,0 +1,22 @@
+#chatLog {
+	height: 420px;
+	width: 700px;
+	overflow: auto;
+	margin: 0 auto;
+	float: right;
+	margin-right: 5em;
+	margin-bottom: 2em;
+	border: 1px solid black;
+	background-color: whitesmoke;
+}
+#formCont{
+	float: right;
+	margin-right: 5.9em;
+	/*margin-top : 2em;*/
+	/*margin-top: 20px;*/
+}
+#chat_input {
+	padding: 14px;
+	width: 600px;
+	/*font-size: 3px;*/
+}
