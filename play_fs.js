@@ -62,11 +62,12 @@ wsServer.on('request',function(request){
             // console.log("rec");
             var msgString = message.utf8Data;
             msgCount+=1;
-    		console.log( (new Date()) + " Message Received Type:UTF8 MSGCOUNT: "+ msgCount);
-            for ( var i in clients)
-    		{
-    			clients[i].sendUTF(msgString);
-    		}
+    		// console.log( (new Date()) + " Message Received Type:UTF8 MSGCOUNT: "+ msgCount);
+            console.log(msgString)
+      //       for ( var i in clients)
+    		// {
+    		// 	clients[i].sendUTF(msgString);
+    		// }
         }
 
         else if (message.type==='binary')
@@ -75,10 +76,11 @@ wsServer.on('request',function(request){
 
             msgCount+=1;
             console.log( (new Date())+ ' Message Received Type: Binary, Length: ' + message.binaryData.length + ' bytes '+ 'MSGCOUNT: '+ msgCount);
-            for (var i in clients)
-            {
-                clients[i].sendBytes(message.binaryData);
-            }                
+            console.log("")
+            // for (var i in clients)
+            // {
+            //     clients[i].sendBytes(message.binaryData);
+            // }                
         }
 
 	});

@@ -2,20 +2,35 @@
 	<title>Testing node.js</title>
 </head>
 <body>
+	<script type="text/javascript" scr="script_jq.js"></script>
 	<div id="chatlog">
 	</div>
+		<!-- <form> -->
 		<input type="text" id="message">
 		<!-- <input type="submit" onClick="javascript:sendMessage()"> -->
 		<button onclick="sendMessage()">Click me</button>
+		<!-- </form> -->
 	<script type="text/javascript">
-		var ws = new WebSocket('ws://192.168.1.7:8080', 'echo-protocol');
+		var ws = new WebSocket('ws://127.0.0.1:4000', 'echo-protocol');
 		function sendMessage(){
 		    var message = document.getElementById('message').value;
+		    console.log(message);
 		    ws.send(message);
 		}
 		ws.addEventListener("message", function(message) {
 		    var msg = message.data;
 		    document.getElementById('chatlog').innerHTML += '<br>' + msg; // Append the message
+		});
+		// $('#message').bind("enterKey",function(e){
+  //  			//do stuff here
+  //  			sendMessage();
+		// });
+		$('#message').keyup(function(e){
+		if(e.keyCode == 13)
+		{
+		  // $(this).trigger("enterKey");
+   			sendMessage();
+		}
 		});
 	</script>
 </body>
