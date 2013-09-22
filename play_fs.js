@@ -1,9 +1,10 @@
 // chat server working on port 8080 (localhost)
 
-
 var http = require('http');
 var WebSocketServer = require('websocket').server;
 var express = require('express');
+var mysql      = require('mysql');
+
 
 var port = 4000;
 var count=0;
@@ -49,41 +50,83 @@ wsServer.on('request',function(request){
 
 
     var connection = request.accept('echo-protocol', request.origin);
-	var id = ++count; //  specifies id for client, initializing from 1
-	clients[id]= connection;
+    var id = ++count; //  specifies id for client, initializing from 1
+    clients[id]= connection;
     curClients++;
-	console.log((new Date()) + ' Connection accepted [' + id + ']');
-	
+    console.log((new Date()) + ' Connection accepted [' + id + ']');
+    
     connection.on('message',function(message){
-	    
+        var dbconnect = mysql.createConnection({
+          host     : 'localhost',
+          user     : 'root',
+          database : 'playdb',
+          password : 'knock123',
+        });
+        
         if (message.type === 'utf8')
         {
 
             // console.log("rec");
             var msgString = message.utf8Data;
             msgCount+=1;
-    		// console.log( (new Date()) + " Message Received Type:UTF8 MSGCOUNT: "+ msgCount);
-            console.log(msgString)
-      //       for ( var i in clients)
-    		// {
-    		// 	clients[i].sendUTF(msgString);
-    		// }
+            // console.log( (new Date()) + " Message Received Type:UTF8 MSGCOUNT: "+ msgCount);
+            if (msgString == "mp")
+            {
+                var sendjson = "";
+                
+                for ( var i in clients)
+                {
+                    clients[i].sendUTF("Beach");
+                }
+                // dbconnect.end();
+                return;
+            }
+            trackdata = JSON.parse(msgString);
+            // console.log("\""+msgString+"\"");
+
+            dbconnect.connect(function(err){
+                if  (err)
+                    console.log("error1: " + err);
+            })
+
+            var sql = 'INSERT INTO list (' 
+                        +'trackId,'
+                        +'song,'
+                        +'artist,'
+                        +'picId'
+                        +') VALUES ';
+            sql += '(' 
+                    +trackdata.id+','
+                    + "\"" + trackdata.track + "\"" + ','
+                    + "\"" + trackdata.artist + "\"" + ','
+                    +trackdata.picId
+                    +')';
+
+            dbconnect.query(sql,function(err){
+                if (err) 
+                    console.log("Insert err: " + err);
+            });
+            
+            
+            
+            // dbconnect.query("SELECT * FROM list WHERE SONG like '%"+trackdata.track+"%'",function(err,rows){
+            //     if (err)
+            //     {
+            //         console.log("error2: " + err);
+            //     } else 
+            //     {
+            //         console.log(rows[0].song);
+            //     }
+            // })
         }
 
-        else if (message.type==='binary')
+        else
         {
-            // console.log("rec");
-
-            msgCount+=1;
-            console.log( (new Date())+ ' Message Received Type: Binary, Length: ' + message.binaryData.length + ' bytes '+ 'MSGCOUNT: '+ msgCount);
-            console.log("")
-            // for (var i in clients)
-            // {
-            //     clients[i].sendBytes(message.binaryData);
-            // }                
+            console.log("msg type!= UTF8");             
         }
 
-	});
+            dbconnect.end();
+    });
 
     connection.on('close', function(reasonCode, description) {
             curClients--;
